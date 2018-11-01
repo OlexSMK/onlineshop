@@ -1,5 +1,6 @@
 package com.study.onlineshop;
 
+import com.study.onlineshop.configuration.ServerConfiguration;
 import com.study.onlineshop.dao.jdbc.JdbcProductDao;
 import com.study.onlineshop.service.impl.DefaultProductService;
 import com.study.onlineshop.web.servlet.LoginServlet;
@@ -14,6 +15,9 @@ import java.util.List;
 
 public class Starter {
     public static void main(String[] args) throws Exception {
+        //load configuration
+        ServerConfiguration config = ServerConfiguration.load("application.properties");
+
         // configure daos
         JdbcProductDao jdbcProductDao = new JdbcProductDao();
 
@@ -38,7 +42,7 @@ public class Starter {
         servletContextHandler.addServlet(new ServletHolder(productsApiServlet), "/api/v1/products");
         servletContextHandler.addServlet(new ServletHolder(new LoginServlet(activeTokens)), "/login");
 
-        Server server = new Server(8080);
+        Server server = new Server(Integer.parseInt(config.getProperty("server.port")));
         server.setHandler(servletContextHandler);
         server.start();
     }

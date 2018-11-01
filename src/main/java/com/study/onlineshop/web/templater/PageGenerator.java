@@ -1,5 +1,6 @@
 package com.study.onlineshop.web.templater;
 
+import com.study.onlineshop.configuration.ServerConfiguration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 
 public class PageGenerator {
-    private static final String HTML_DIR = "templates";
+    private static String HTML_DIR;
 
     private static PageGenerator pageGenerator;
     private final Configuration cfg;
@@ -36,5 +37,7 @@ public class PageGenerator {
 
     private PageGenerator() {
         cfg = new Configuration();
+        ServerConfiguration config = ServerConfiguration.get();
+        HTML_DIR = config.getProperty("content.template.location");
     }
 }

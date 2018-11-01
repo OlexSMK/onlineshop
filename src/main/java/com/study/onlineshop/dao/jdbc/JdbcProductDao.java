@@ -1,5 +1,6 @@
 package com.study.onlineshop.dao.jdbc;
 
+import com.study.onlineshop.configuration.ServerConfiguration;
 import com.study.onlineshop.dao.ProductDao;
 import com.study.onlineshop.dao.jdbc.mapper.ProductRowMapper;
 import com.study.onlineshop.entity.Product;
@@ -34,10 +35,15 @@ public class JdbcProductDao implements ProductDao {
     }
 
     private Connection getConnection() throws SQLException {
-        String url = "jdbc:postgresql://localhost/db2_onlineshop";
-        String name = "postgres";
-        String password = "root";
-
-        return DriverManager.getConnection(url, name, password);
+        ServerConfiguration config = ServerConfiguration.get();
+        String url = config.getProperty("jdbc.driver") + ':' + config.getProperty("jdbc.url");
+        String name = config.getProperty("jdbc.username");
+        String password = config.getProperty("jdbc.password");;
+        if( name!=  null){
+            return DriverManager.getConnection(url, name, password);
+        }
+        else{
+            return DriverManager.getConnection(url);
+        }
     }
 }
